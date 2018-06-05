@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<title>Room Page</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+
+	<ul id="ul"></ul>
+	<form id="form" action="" method="POST">
+	    <input type="text" name="message" />
+	    <input type="submit" value="Send" />
+	</form>
+	<script>
+	 $.ajax({
+	     url: 'http://localhost:3000/messages', /* we pass the user input url value here */
+	     dataType:'json',
+	     async:false,
+	     success:function(data){
+		 console.log(data); /* returns the data in the XML to the browser console */
+		 for (var i = 0; i < data.length; ++i){
+		     console.log(data[i].message);
+		     $('#ul').append($('<li>').append(data[i].message));
+		 }
+	     }
+	 });
+
+	 $('#form').submit(function (event){
+	     console.log('FORM IS CALLED');
+	     event.preventDefault();
+	     console.log(this.message.value);
+	     $('#ul').append($('<li>').append(this.message.value));
+	 });
+	</script>
+	
+    </body>
+</html>

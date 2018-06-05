@@ -4,25 +4,43 @@
 	<title>Index Page</title>
 	<link rel='stylesheet' href='/stylesheets/style.css' />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
     </head>
     <body>
-	<form action="/login" method="POST">
-	<input type="text" name="username" />
+	<form>
+	<input type="text" name="username" id="username" />
 	<button>Send</button>
 	</form>
 
-	<button id="button">Click here</button>
+	<% if (typeof username !== 'undefined') { %>
+	    <h2 id="h2"><%= username %></h2>
+	<% } %>	
+
+	<br>
+	<button id="button">Show</button>
 	<p id="p"></p>
-	
 	<script>
-	 $("#button").click(function(){
-	     $("#p").load("http://localhost:3000/users", function(responseTxt, statusTxt, xhr){
-		 if(statusTxt == "success")
-		     alert("External content loaded successfully!");
-		 if(statusTxt == "error")
-		     alert("Error: " + xhr.status + ": " + xhr.statusText);
+	 $("form").submit(function(event){
+	     event.preventDefault();
+	     $.ajax({
+		 type: "POST",
+		 url: "/login",
+		 data: {"username": $('#username').val()},
+		 success: function(data){
+		     if (data){
+			 console.log('DATA:', data);
+		     }
+		     else{
+			 console.log('DATA: else statement');
+		     }
+
+		 },
+		 dataType: "json"
 	     });
+	 });
+	 
+	 $('#button').click(function(){
+	     $('#p').load('users h1', {});
 	 });
 	</script>
     </body>

@@ -3,16 +3,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    
-    console.log('This is from GET method');
-    res.render('index', {username: 'This is from GET'});
+    console.log('ROOM: GET method');
+    res.render('room');
 });
 
 router.post('/', function(req, res, next){
-    console.log('This is from POST method');
+    console.log('Room: POST method');
     var username = req.body.username;
-    console.log(req.body);
-    res.render('index', {username: username});
+    console.log('req.body.username', req.body.username);
+    res.render('room');
 });
 
 module.exports = router;
