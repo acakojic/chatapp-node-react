@@ -3,9 +3,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    var username = req.session.username;
+    console.log('Index Get Method; session: ', username );
 
-    console.log('Index Get Method;');
-    res.render('index', {username: 'Please login..'});
+    if (typeof username == 'undefined'){
+	res.render('index', {username: 'Please login..'});
+    }else{
+	res.redirect('/room');
+    }
+    
 });
 
 router.post('/', function(req, res, next){
@@ -13,8 +19,12 @@ router.post('/', function(req, res, next){
     var username = req.session.username = req.body.username;
     
     console.log('Index Post Method; Added session:', username);
-    
-    res.render('index', {username: 'Welcome ' + username});
+    if (typeof username == 'undefined'){
+	res.redirect('/');
+    }else{
+	res.redirect('/room');
+    }
+
 });
 
 module.exports = router;

@@ -15,11 +15,11 @@ connection.connect();
 /* GET room page. */
 router.get('/', function(req, res, next) {
     var username = req.session.username;
-    console.log('ROOM: Router GET method');
-    console.log('Room: Post method; session:', req.session.username);
+    console.log('Room: Get method; session:', req.session.username);
     if (typeof username == 'undefined'){
-	res.redirect('/');
+	res.redirect('http://localhost:3000/');
     }else{
+	
 	res.render('room', {username: username});
     }
 });
