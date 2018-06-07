@@ -14,10 +14,10 @@ connection.connect();
 /* GET messages json listing. */
 router.get('/', function(req, res, next) {
     connection.query('SELECT * FROM messages order by id desc limit 10', function (error, results, fields) {
-	console.log("Messages: GET");
+	console.log("Messages: ROOTES GET");
 	if (error) throw error;
-
-	console.log('The solution is: ', results);
+	
+//	console.log('The solution is: ', results);
 	res.json(results);
     });
 });

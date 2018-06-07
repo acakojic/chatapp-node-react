@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+
+/* GET room page. */
 router.get('/', function(req, res, next) {
-    console.log('ROOM: GET method');
-    res.io.emit('socket io', "random-text");
+    console.log('ROOM: Router GET method');
+    
     res.render('room');
 });
 

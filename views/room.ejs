@@ -15,14 +15,25 @@
 	
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-
 	 $(function () {
+	     var socket = io();
+
+	     socket.on('socket io', function (data) {
+		 console.log("SOCKET IO", data);
+		 //		 $('#ul').append($('<li>').append(data));
+		 $('#p').text(data);
+	     });
+
+	     socket.on('add message to ul', function (data) {
+		 $('#ul').append($('<li>').append(data));
+	     });
+	     
 	     $.ajax({
 		 url: 'http://localhost:3000/messages', /* we pass the user input url value here */
 		 dataType:'json',
 		 async:false,
 		 success:function(data){
-		     console.log(data); /* returns the data in the XML to the browser console */
+		     console.log('ajax success', data); /* returns the data in the XML to the browser console */
 		     for (var i = 0; i < data.length; ++i){
 			 console.log(data[i].message);
 			 $('#ul').append($('<li>').append(data[i].message));
@@ -30,19 +41,18 @@
 		 }
 	     });
 
+	     
 	     $('#form').submit(function (event){
 		 console.log('FORM IS CALLED');
 		 event.preventDefault();
 		 console.log(this.message.value);
-		 $('#ul').append($('<li>').append(this.message.value));
+		 //		 $('#ul').append($('<li>').append(this.message.value));
+		 socket.emit('test message', this.message.value);
 		 $('form #message').val('');
+		 return false;
 	     });
 	     
-	     var socket = io();
-	     socket.on('socket io', function (data) {
-		 console.log("SOCKET IO", data);
-		 $('p').text('OKKKKKK');
-	     });
+	     
 	 });
 	</script>
 	
