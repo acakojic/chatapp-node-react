@@ -6,12 +6,16 @@
     </head>
     <body>
 
+	<br />
+	<% if (locals.username){ %>
+	    <h1><%= username %></h1>
+	<% } %>
+	
 	<ul id="ul"></ul>
-	<form id="form" action="" method="POST">
+	<form id="form" action="">
 	    <input type="text" id="message" name="message" />
 	    <input type="submit" value="Send" />
 	</form>
-	<p id="p"></p>
 	
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
@@ -45,8 +49,15 @@
 	     $('#form').submit(function (event){
 		 console.log('FORM IS CALLED');
 		 event.preventDefault();
-		 console.log(this.message.value);
-		 //		 $('#ul').append($('<li>').append(this.message.value));
+		 $.ajax({
+		     type: "POST",
+		     url: '/room',
+		     data: {message: this.message.value},
+		     success: function(arg){
+			 console.log('Success send Post:', arg);
+		     },
+//		     dataType: dataType
+		 });
 		 socket.emit('test message', this.message.value);
 		 $('form #message').val('');
 		 return false;

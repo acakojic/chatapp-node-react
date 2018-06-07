@@ -11,9 +11,10 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+
 /* GET messages json listing. */
 router.get('/', function(req, res, next) {
-    connection.query('SELECT * FROM messages order by id desc limit 10', function (error, results, fields) {
+    connection.query('(SELECT id, message FROM messages order by id desc limit 10) order by id', function (error, results, fields) {
 	console.log("Messages: ROOTES GET");
 	if (error) throw error;
 	

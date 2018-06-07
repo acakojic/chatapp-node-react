@@ -7,28 +7,19 @@
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     </head>
     <body>
-	<form action="/login" method="POST">
+	<label>Please enter your username:</label>
+	<br/>
+	<form action="/" method="POST">
 	    <input type="text" name="username" />
 	    <button>Send</button>
 	</form>
+	<br />
+	<% if (locals.username){ %>
+	<h1><%= username %></h1>
+	<% } %>
 	
 	<script>
-	 /*
-	 $('button').on('click', function(event) {
-	     //event.preventDefault();
-	     var input = $('#username').val();
-	     console.log(input);
-	     $.ajax({
-		 type: 'POST',
-		 url: '/post',
-		 data: {name: 'Dunno'},
-		 success: function(resultData) {
-		     console.log('ResultData', resultData);
-
-		 }
-	     });
-	     $('input').val('');
-	 });*/
+	 
 	</script>
     </body>
 </html>
