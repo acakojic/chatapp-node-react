@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var messagesRouter = require('./routes/messages');
 var roomRouter = require('./routes/room');
 var loginRouter = require('./routes/login');
+var testRouter = require('./routes/test');
 
 var app = express();
 var server = require('http').Server(app);
@@ -38,6 +39,7 @@ app.use('/', indexRouter);
 app.use('/messages', messagesRouter);
 app.use('/room', roomRouter);
 app.use('/login', loginRouter);
+app.use('/test', testRouter);
 
 
 //handle sockets:
