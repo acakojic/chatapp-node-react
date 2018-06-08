@@ -14,12 +14,13 @@ connection.connect();
 
 /* GET room page. */
 router.get('/', function(req, res, next) {
+    console.log('------------------', req.session.username);
     var username = req.session.username;
     console.log('Room: Get method; session:', req.session.username);
     if (typeof username == 'undefined'){
 	res.redirect('http://localhost:3000/');
     }else{
-	
+
 	res.render('room', {username: username});
     }
 });
@@ -30,9 +31,9 @@ router.post('/', function(req, res, next){
     console.log('Room: POST method');
     console.log('Room: Post method; session:', req.session.username);
     
-    console.log('req.body.username:', message);
-    
-    connection.query('INSERT INTO messages (message) VALUES (?)', message, function (error, results) {
+    console.log('req.body.username and message:', username, ': ', message);
+    var sql = "INSERT INTO messages (user, message) VALUES ('"+ username + "', '" + message + "')";
+    connection.query(sql, function (error, results) {
 	if (error) throw error;
 	console.log('Insert into messages value:', message, 'added successfully!');
     });

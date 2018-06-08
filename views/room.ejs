@@ -3,15 +3,41 @@
     <head>
 	<title>Room Page</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<style type="text/css">
+	 .console {
+	     height: 200px;
+	     width: 50%;
+	     
+	     font-family:Courier;
+	     color: #CCCCCC;
+	     background: #000000;
+	     border: 3px double #CCCCCC;
+	     padding: 10px;
+	     overflow-y: auto;
+	 }
+
+	 ul {
+	     list-style-type: none;
+	     margin: 0;
+	     padding: 0;
+	 }
+
+	 #span{
+	     color: #99ff66
+	 }
+	</style>
     </head>
     <body>
 
 	<br />
 	<% if (locals.username){ %>
-	    <h1><%= username %></h1>
+	    <h1>Welcome <span id="h1"><%= username %></span></h1>
 	<% } %>
+
+	<div class="console">
+	    <ul id="ul"></ul>
+	</div>
 	
-	<ul id="ul"></ul>
 	<form id="form" action="">
 	    <input type="text" id="message" name="message" />
 	    <input type="submit" value="Send" />
@@ -22,29 +48,24 @@
 	 $(function () {
 	     var socket = io();
 
-	     socket.on('socket io', function (data) {
-		 console.log("SOCKET IO", data);
-		 //		 $('#ul').append($('<li>').append(data));
-		 $('#p').text(data);
-	     });
+	     var username = document.getElementById('h1').innerHTML;
 
 	     socket.on('add message to ul', function (data) {
-		 $('#ul').append($('<li>').append(data));
+		 $('#ul').append($('<li>').append($('<span id="span">').append(data.username), ': ' + data.message));
 	     });
 	     
 	     $.ajax({
 		 url: 'http://localhost:3000/messages', /* we pass the user input url value here */
-		 dataType:'json',
-		 async:false,
-		 success:function(data){
+		 dataType: 'json',
+		 async: false,
+		 success: function(data){
 		     console.log('ajax success', data); /* returns the data in the XML to the browser console */
 		     for (var i = 0; i < data.length; ++i){
 			 console.log(data[i].message);
-			 $('#ul').append($('<li>').append(data[i].message));
+			 $('#ul').append($('<li>').append($('<span id="span">').append(data[i].user), ': ' + data[i].message));
 		     }
 		 }
 	     });
-
 	     
 	     $('#form').submit(function (event){
 		 console.log('FORM IS CALLED');
@@ -52,16 +73,20 @@
 		 $.ajax({
 		     type: "POST",
 		     url: '/room',
-		     data: {message: this.message.value},
+		     data: {message: this.message.value}
+		     ,
 		     success: function(arg){
 			 console.log('Success send Post:', arg);
 		     },
-//		     dataType: dataType
+		     //		     dataType: dataType
+	     });
+		 socket.emit('test message', {
+		     message: this.message.value,
+		     username: username
 		 });
-		 socket.emit('test message', this.message.value);
 		 $('form #message').val('');
 		 return false;
-	     });
+	 });
 	     
 	     
 	 });
