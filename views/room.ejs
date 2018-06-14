@@ -31,7 +31,7 @@
 
 	<br />
 	<% if (locals.username){ %>
-	    <h1>Welcome <span id="h1"><%= username %></span></h1>
+	    <h1>Welcome <span id="usernameId"><%= username %></span></h1>
 	<% } %>
 
 	<div class="console">
@@ -47,15 +47,18 @@
 	<script>
 	 $(function () {
 	     var socket = io();
-
-	     var username = document.getElementById('h1').innerHTML;
+	     var username = document.getElementById('usernameId').innerHTML;
+	     console.log("USERNAME --------------------> ", username);
+	     var message;
 
 	     socket.on('add message to ul', function (data) {
 		 $('#ul').append($('<li>').append($('<span id="span">').append(data.username), ': ' + data.message));
+		 //username = data.username;
+		 message = data.message;
 	     });
 	     
 	     $.ajax({
-		 url: 'http://localhost:3000/messages', /* we pass the user input url value here */
+		 url: 'http://localhost:3003/messages', /* we pass the user input url value here */
 		 dataType: 'json',
 		 async: false,
 		 success: function(data){
@@ -67,19 +70,17 @@
 		 }
 	     });
 	     
-	     $('#form').submit(function (event){
-		 console.log('FORM IS CALLED');
+	     $('#form').submit(function (event) {
+		 console.log('FORM IS CALLED: ', username);
 		 event.preventDefault();
-		 $.ajax({
+		 /*$.ajax({
 		     type: "POST",
 		     url: '/room',
-		     data: {message: this.message.value}
-		     ,
-		     success: function(arg){
-			 console.log('Success send Post:', arg);
-		     },
-		     //		     dataType: dataType
-	     });
+		     data: {
+			 username: username,
+			 message: message
+		     }
+	     });*/
 		 socket.emit('test message', {
 		     message: this.message.value,
 		     username: username

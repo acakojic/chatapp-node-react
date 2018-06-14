@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
     var username = req.session.username;
     console.log('Room: Get method; session:', req.session.username);
     if (typeof username == 'undefined'){
-	res.redirect('http://localhost:3000/');
+	res.redirect('http://localhost:3003/');
     }else{
 
 	res.render('room', {username: username});
@@ -26,8 +26,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next){
+
+    var username = req.body.username;
     var message = req.body.message;
-    var username = req.session.username;
     console.log('Room: POST method');
     console.log('Room: Post method; session:', req.session.username);
     
