@@ -4,7 +4,6 @@ module.exports = function (io) {
 	socket.on('test message', function (data) {
 	    // do stuff
 	    console.log('test message, socket, value:', data);
-	    console.log('--+++++----- ', data.username);
 	    io.emit('add message to ul', data);
 	});
     });
