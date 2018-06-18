@@ -11,7 +11,6 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-
 /* GET room page. */
 router.get('/', function(req, res, next) {
     console.log('------------------', req.session.username);

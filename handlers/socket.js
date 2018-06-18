@@ -10,6 +10,7 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var clients = [];
+var test_clients = ['aca', 'misa'];
 var count = 0;
 var bool = false;
 
@@ -32,13 +33,6 @@ module.exports = function (io) {
 
 	});
 
-	socket.on('join room', function (data){
-	    console.log("SOCKET JOIN ROOM DATA: ", data);
-	    clients.push(data);
-	    socket.join(data);
-	    console.log("CLIENTS:", clients);
-	    socket.emit('clients', clients);
-	});
 	//////////////////////////////////////////////////
 
 	socket.on('clients', function(data){
@@ -62,13 +56,35 @@ module.exports = function (io) {
 	    io.emit('broadcast', count + ' people online');
 	});
 
+	socket.on('join room', function (data){
+	    console.log("JOINED ROOM");
+	    socket.join("room1");
+	});
 
+	socket.on('hello', function(x, y, z, abc){
+	    console.log("XYZabc", x, ":", y, ";", z, "-", abc);
+	});
+
+	// private chat clients test
+	socket.on('private room', function(data){
+	    var result = test_clients.includes(data);
+	    console.log("PRivate room", data);
+	    console.log("PRIVATE CHAT:", result);
+
+	    if (result){
+		socket.emit('private room', data, function(){
+		    console.log("Welcome to private chat room", data);
+		});
+	    }
+	});
+	
+	//disconnect client
 	socket.on('disconnect', function (data){
 	    console.log("USER HAS DISCONNECTED");
 	    count = clients.length;
 	    io.emit('broadcast', count + ' people online');
-	    
 	});
+
 	
     });
 

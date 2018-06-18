@@ -17,12 +17,12 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next){
     console.log('Index Post Method:', req.body.username);
     var username = req.session.username = req.body.username;
-    
+    var room = req.body.room;
     console.log('Index Post Method; Added session:', username);
     if (typeof username == 'undefined'){
-	res.redirect('/');
+	res.redirect("/");
     }else{
-	res.redirect('/room');
+	res.redirect("/room");
     }
 
 });

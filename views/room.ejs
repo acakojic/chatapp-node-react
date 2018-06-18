@@ -44,18 +44,29 @@
 	     border: 3px solid blue;
 	 }
 
-	 div .right-container{
+	 div .center-container{
 	     position: relative;
 	     float: center;
 	     display: inline-block;
 	     top: 30px;
 	     left: 30px;
-	     width: 600px;
+	     width: 500px;
 	     height: 400px;
 	     background-color: yellow;
 	     border: 3px solid green;
 	 }
-	 
+
+	 div .right-container{
+	     display: none;
+	     position: relative;
+	     float: right;
+	     top: 30px;
+	     left: 10px;
+	     width: 200px;
+	     height: 400px;
+	     background-color: orange;
+	     border: 3px solid black;
+	 }
 	</style>
     </head>
     <body>
@@ -63,11 +74,13 @@
 	    <div class="left-container">
 		<p id="online"></p>
 		<ul id="users"></ul>
+		<button id="joinRoom">Join Room</button>
 	    </div>
-	    <div class="right-container">
+	    <div class="center-container">
 		<br />
+		<h2>Global Chat</h2>
 		<% if (locals.username){ %>
-		    <h1>Welcome <span id="usernameId"><%= username %></span></h1>
+		    <h3>Welcome <span id="usernameId"><%= username %></span></h1>
 		<% } %>
 
 		<div class="console">
@@ -80,13 +93,21 @@
 		</form>
 
 	    </div>
+	    <div class="right-container">
+		<label><%= username %></label>
+		<input type="text" id="privateTextInput" />
+		<button id="privateButton">Send Message</button>
+	    </div>
 	</div>
 	
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
+	 
+	 
+	 
 	 $(function () {
 	     var socket = io();
-	     var username = "<%= username %>"; //get session name
+	     var username = "<%= username %>"; // get session name
 	     var message;
 
 	     socket.on('add message to ul', function (data) {
@@ -140,6 +161,23 @@
 
 	     socket.emit('clients', username);
 	     console.log("USERNAME: ", username);
+	     socket.emit('join room', username);
+
+	     
+	     document.getElementById("joinRoom").addEventListener("click", function(){
+		 console.log("Join private chat room");
+		 socket.emit("private room", username);
+	     });
+
+	     socket.on('private room', function (data){
+		 console.log("Welcome user", data);
+		 document.getElementsByClassName("right-container")[0].style.display = "inline-block";
+	     });
+
+	     document.getElementById('privateButton').addEventListener("click", function(){
+		 var input = document.getElementById('privateTextInput').value;
+		 console.log("Private chat:", input);
+	     }, false);
 	     
 	 });
 	</script>
