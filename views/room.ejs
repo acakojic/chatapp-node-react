@@ -25,35 +25,72 @@
 	 #span{
 	     color: #99ff66
 	 }
+
+	 div .container{
+	     position: relative;
+	     display: block;
+	     border: 3px solid red;
+	 }
+
+	 div .left-container{
+	     position: relative;
+	     float: left;
+	     display: inline-block;
+	     top: 30px;
+	     left: 10px;
+	     width: 200px;
+	     height: 400px;
+	     background: grey;
+	     border: 3px solid blue;
+	 }
+
+	 div .right-container{
+	     position: relative;
+	     float: center;
+	     display: inline-block;
+	     top: 30px;
+	     left: 30px;
+	     width: 600px;
+	     height: 400px;
+	     background-color: yellow;
+	     border: 3px solid green;
+	 }
+	 
 	</style>
     </head>
     <body>
+	<div class="container">
+	    <div class="left-container">
+		<p id="online"></p>
+		<ul id="users"></ul>
+	    </div>
+	    <div class="right-container">
+		<br />
+		<% if (locals.username){ %>
+		    <h1>Welcome <span id="usernameId"><%= username %></span></h1>
+		<% } %>
 
-	<br />
-	<% if (locals.username){ %>
-	    <h1>Welcome <span id="usernameId"><%= username %></span></h1>
-	<% } %>
+		<div class="console">
+		    <ul id="ul"></ul>
+		</div>
+		
+		<form id="form" action="">
+		    <input type="text" id="message" name="message" />
+		    <input type="submit" value="Send" />
+		</form>
 
-	<div class="console">
-	    <ul id="ul"></ul>
+	    </div>
 	</div>
-	
-	<form id="form" action="">
-	    <input type="text" id="message" name="message" />
-	    <input type="submit" value="Send" />
-	</form>
 	
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	 $(function () {
 	     var socket = io();
-	     var username = document.getElementById('usernameId').innerHTML;
-	     console.log("USERNAME --------------------> ", username);
+	     var username = "<%= username %>"; //get session name
 	     var message;
 
 	     socket.on('add message to ul', function (data) {
 		 $('#ul').append($('<li>').append($('<span id="span">').append(data.username), ': ' + data.message));
-		 //username = data.username;
 		 message = data.message;
 	     });
 	     
@@ -64,7 +101,7 @@
 		 success: function(data){
 		     console.log('ajax success', data); /* returns the data in the XML to the browser console */
 		     for (var i = 0; i < data.length; ++i){
-			 console.log(data[i].message);
+			 //console.log(data[i].message);
 			 $('#ul').append($('<li>').append($('<span id="span">').append(data[i].user), ': ' + data[i].message));
 		     }
 		 }
@@ -73,22 +110,36 @@
 	     $('#form').submit(function (event) {
 		 console.log('FORM IS CALLED: ', username);
 		 event.preventDefault();
-		 /*$.ajax({
-		     type: "POST",
-		     url: '/room',
-		     data: {
-			 username: username,
-			 message: message
-		     }
-	     });*/
+
 		 socket.emit('test message', {
 		     message: this.message.value,
 		     username: username
 		 });
 		 $('form #message').val('');
 		 return false;
-	 });
-	     
+	     });
+
+	     socket.on('broadcast', function(data){
+		 console.log("Connected users: ", data);
+		 document.getElementById("online").innerHTML = data;
+	     });
+
+	     socket.on('clients', function(data){
+		 console.log("Clients[]:", data);
+		 var ul = document.getElementById("users");
+		 ul.innerHTML = "";
+		 var li = document.createElement('li');
+
+		 data.forEach (function(element){
+		     console.log(element);
+		     var li = document.createElement('li');
+		     li.innerHTML = element;
+		     document.getElementById("users").appendChild(li);
+		 });
+	     });
+
+	     socket.emit('clients', username);
+	     console.log("USERNAME: ", username);
 	     
 	 });
 	</script>

@@ -26,19 +26,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next){
-
-    var username = req.body.username;
-    var message = req.body.message;
-    console.log('Room: POST method');
-    console.log('Room: Post method; session:', req.session.username);
     
-    console.log('req.body.username and message:', username, ': ', message);
-    var sql = "INSERT INTO messages (user, message) VALUES ('"+ username + "', '" + message + "')";
-    connection.query(sql, function (error, results) {
-	if (error) throw error;
-	console.log('Insert into messages value:', message, 'added successfully!');
-    });
-    res.render('room', {username: username});
 });
 
 module.exports = router;

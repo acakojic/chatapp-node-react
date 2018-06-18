@@ -4,7 +4,14 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     console.log("Login: GET");
-    res.render('test');
+
+    var username = req.session.username;
+
+    if (typeof username == 'undefined'){
+	res.redirect('http://localhost:3003/');
+    }else{
+	res.render('test', {username: username});
+    }
 });
 
 router.post('/', function(req, res, next) {

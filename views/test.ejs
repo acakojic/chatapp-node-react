@@ -4,49 +4,46 @@
 	<title>Test Page</title>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<style type="text/css">
-	 .console {
-	     height: 200px;
-	     width: 50%;
-	     
-	     font-family:Courier;
-	     color: #CCCCCC;
-	     background: #000000;
-	     border: 3px double #CCCCCC;
-	     padding: 10px;
-	     overflow-y: auto;
-	 }
-
-	 ul {
-	     list-style-type: none;
-	     margin: 0;
-	     padding: 0;
-	 }
-
-	 span{
-	     color: #99ff66
-	 }
+	  
 	</style>
 
     </head>
     <body>
-	
-	<div class="console">
-	    <ul>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: ako</li>
-		<li><span>aca@terminal-BG-1389</span>: gde</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-		<li><span>aca@terminal-BG-1389</span>: Sta</li>
-	    </ul>
+	<div>
+	    <p id="username"></p>
 	</div>
 
+	<ul id="users">
+	</ul>
 	
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	 var socket = io();
+
+	 var username = "<%= username %>";
+
+	 var clients = [];
+
+	 document.getElementById('username').innerHTML = username;
+	 var users = document.getElementById('users');
+
+
+	 socket.on('clients', function(clients){
+	     console.log("Clients:", clients);
+	     //clients.push(data);
+	     clients.forEach( function(item, index, array){
+		 console.log("FOREACH:", item, " : ", index, " - ", array);
+		 var li = document.createElement("li");
+		 li.setAttribute('id', index);
+		 li.innerHTML = item;
+		 users.appendChild(li);
+	     });
+
+	 });
+
+	 socket.emit('join room', username);
+
+	 
+	</script>
     </body>
 </html>
